@@ -1,0 +1,36 @@
+---
+
+- name: check if yay is installed
+  command: pacman -Qi yay
+  register: check
+  ignore_errors: yes
+
+- when: "'not found' in check.stderr"
+  block:
+
+  - name: create temporary build folder
+    tempfile:
+      state: directory
+      suffix: yay
+    register: tmp
+
+  - name: ensure git is present
+    package:
+      name: git
+      state: present
+
+  - name: clone yay repo
+    git:
+      repo: https://aur.archlinux.org/yay.git
+      dest: "{{ tmp.path }}/yay"
+
+  - name: install yay
+    command: makepkg -si --noconfirm --rmdeps
+    args:
+      chdir: "{{ tmp.path }}/yay"
+
+  always:
+    - name: delete temporary build folder
+      file:
+        path: "{{ tmp.path }}"
+        state: absent

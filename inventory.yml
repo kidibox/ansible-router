@@ -1,0 +1,7 @@
+all:
+  hosts:
+    router:
+      ansible_host: localhost
+      ansible_port: 2222
+  vars:
+    ansible_user: ansible
