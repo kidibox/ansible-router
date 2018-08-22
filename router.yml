@@ -3,3 +3,4 @@
 - hosts: router
   roles:
   - yay
+  - dnsmasq
