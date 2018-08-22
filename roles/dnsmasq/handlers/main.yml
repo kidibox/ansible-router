@@ -1,0 +1,14 @@
+---
+
+- name: enable dnsmasq
+  service:
+    name: dnsmasq
+    enabled: true
+    state: restarted
+  become: true
+
+- name: reload dnsmasq
+  service:
+    name: dnsmasq
+    state: reloaded
+  become: true

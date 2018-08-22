@@ -1,0 +1,23 @@
+---
+
+- name: instal dnsmasq
+  package:
+    name: dnsmasq
+    state: present
+  notify:
+    - enable dnsmasq
+  become: true
+
+- name: ensure /etc/dnsmasq.d is present
+  file:
+    path: /etc/dnsmasq.d
+    state: directory
+  become: true
+
+- name: load all files fron /etc/dnsmasq.d
+  lineinfile:
+    path: /etc/dnsmasq.conf
+    line: "conf-dir=/etc/dnsmasq.d/,*.conf"
+  notify:
+    - reload dnsmasq
+  become: true
