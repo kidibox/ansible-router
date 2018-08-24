@@ -21,3 +21,11 @@
   notify:
     - reload dnsmasq
   become: true
+
+- name: configure dhcp server
+  template:
+    src: dhcp.conf.j2
+    dest: "/etc/dnsmasq.d/dhcp.conf"
+  become: true
+  notify:
+    - reload dnsmasq
