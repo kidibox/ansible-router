@@ -1,0 +1,8 @@
+---
+
+rename_interfaces: []
+wan_interface: wan0
+
+ppp_provider: test
+ppp_username: abcd
+ppp_password: password

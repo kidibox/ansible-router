@@ -1,2 +1,11 @@
 ---
 
+rename_interfaces:
+  - name: wan0
+    macaddress: "00:0d:b9:4b:f8:48"
+  - name: lan0
+    macaddress: "00:0d:b9:4b:f8:49"
+  - name: lan1
+    macaddress: "00:0d:b9:4b:f8:4a"
+
+dnsmasq_listen_interface: lan0

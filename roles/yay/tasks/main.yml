@@ -8,6 +8,12 @@
 - when: "'not found' in check.stderr"
   block:
 
+  - name: ensure base-devel is installed
+    package:
+      name: base-devel
+      state: present
+    become: true
+
   - name: create temporary build folder
     tempfile:
       state: directory

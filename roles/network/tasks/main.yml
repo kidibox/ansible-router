@@ -1,0 +1,50 @@
+---
+
+- name: create link files
+  template:
+    src: systemd/network.link.j2
+    dest: "/etc/systemd/network/{{ '%02d' | format(idx) }}-{{ item.name }}.link"
+  loop: "{{ rename_interfaces }}"
+  loop_control:
+    index_var: idx
+  become: true
+  notify:
+    - reboot
+    - wait
+
+- meta: flush_handlers
+
+- name: ensure wan0 is up at boot
+  template:
+    src: systemd/wan.network.j2
+    dest: "/etc/systemd/network/00-wan0.network"
+  become: true
+  notify:
+    - restart systemd-networkd
+
+- name: install ppp
+  package:
+    name: ppp
+    state: installed
+  become: true
+
+- name: create ppp peer file
+  template:
+    src: ppp/peers/provider.j2
+    dest: "/etc/ppp/peers/{{ ppp_provider }}"
+  become: true
+
+- name: update chap-secrets
+  lineinfile:
+    path: /etc/ppp/chap-secrets
+    regexp: '^{{ ppp_username }}.*$'
+    line: '{{ ppp_username }} * {{ ppp_password }}'
+  become: true
+
+- service:
+    name: "ppp@{{ ppp_provider }}"
+    enabled: true
+    state: started
+  become: true
+
+- meta: flush_handlers

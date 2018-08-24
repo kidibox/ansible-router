@@ -2,5 +2,7 @@
 
 - hosts: router
   roles:
-  - yay
-  - dnsmasq
+  - role: network
+  - role: dnsmasq
+    listen_interface: "{{ dnsmasq_listen_interface }}"
+  - role: yay
