@@ -41,6 +41,18 @@
     line: '{{ ppp_username }} * {{ ppp_password }}'
   become: true
 
+- name: "ensure ppp@{{ ppp_provider }}.service starts when {{ wan_interface }} is ready"
+  block:
+    - name: ensure directory is present
+      file:
+        path: "/etc/systemd/system/ppp@{{ ppp_provider }}.service.d"
+        state: directory
+    - name: template override file
+      template:
+        src: systemd/ppp.override.conf
+        dest: "/etc/systemd/system/ppp@{{ ppp_provider }}.service.d/override.conf"
+  become: true
+
 - service:
     name: "ppp@{{ ppp_provider }}"
     enabled: true

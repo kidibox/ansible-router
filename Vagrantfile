@@ -13,7 +13,7 @@ Gateway=10.0.2.15
 Destination=10.0.2.0/24
 
 [DHCP]
-UseDns=false
+UseDNS=false
 UseRoutes=false
 EOT
 
@@ -46,8 +46,8 @@ Vagrant.configure('2') do |config|
     login
     lcp-echo-interval 10
     lcp-echo-failure 2
-    ms-dns 8.8.8.8
-    ms-dns 8.8.4.4
+    ms-dns 1.1.1.1
+    ms-dns 1.0.0.1
     netmask 255.255.255.0
     defaultroute
     noipdefault
@@ -109,6 +109,10 @@ Vagrant.configure('2') do |config|
     router.vm.provision 'ansible' do |ansible|
       ansible.limit = 'all'
       ansible.playbook = 'router.yml'
+      ansible.raw_arguments = ['--diff']
+      ansible.extra_vars = {
+        is_vagrant: true
+      }
     end
     router.vm.provision 'shell', run: 'once', inline: disable_nat
   end
