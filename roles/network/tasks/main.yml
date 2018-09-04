@@ -1,62 +1,47 @@
 ---
 
-- name: create link files
-  template:
-    src: systemd/network.link.j2
-    dest: "/etc/systemd/network/{{ '%02d' | format(idx) }}-{{ item.name }}.link"
-  loop: "{{ rename_interfaces }}"
-  loop_control:
-    index_var: idx
-  become: true
-  notify:
-    - reboot
-    - wait
-
-- meta: flush_handlers
-
-- name: ensure wan0 is up at boot
-  template:
-    src: systemd/wan.network.j2
-    dest: "/etc/systemd/network/00-wan0.network"
-  become: true
-  notify:
-    - restart systemd-networkd
-
-- name: install ppp
+- name: ensure ppp is installed
   package:
     name: ppp
     state: installed
   become: true
 
-- name: create ppp peer file
+- name: create udev rules
   template:
-    src: ppp/peers/provider.j2
-    dest: "/etc/ppp/peers/{{ ppp_provider }}"
+    src: udev/rules.d/network.rules.j2
+    dest: /etc/udev/rules.d/10-network.rules
   become: true
-
-- name: update chap-secrets
-  lineinfile:
-    path: /etc/ppp/chap-secrets
-    regexp: '^{{ ppp_username }}.*$'
-    line: '{{ ppp_username }} * {{ ppp_password }}'
-  become: true
-
-- name: "ensure ppp@{{ ppp_provider }}.service starts when {{ wan_interface }} is ready"
-  block:
-    - name: ensure directory is present
-      file:
-        path: "/etc/systemd/system/ppp@{{ ppp_provider }}.service.d"
-        state: directory
-    - name: template override file
-      template:
-        src: systemd/ppp.override.conf
-        dest: "/etc/systemd/system/ppp@{{ ppp_provider }}.service.d/override.conf"
-  become: true
-
-- service:
-    name: "ppp@{{ ppp_provider }}"
-    enabled: true
-    state: started
-  become: true
+  notify:
+    - reboot
+    - wait
+  when: rename_interfaces | length > 0
 
 - meta: flush_handlers
+
+- name: create wan profile
+  template:
+    src: netctl/wan.j2
+    dest: /etc/netctl/wan
+  become: true
+
+- name: enable wan profile
+  command: netctl reenable wan
+  become: true
+
+- name: start wan profile
+  command: netctl restart wan
+  become: true
+
+- name: create lan profile
+  template:
+    src: netctl/lan.j2
+    dest: /etc/netctl/lan
+  become: true
+
+- name: enable lan profile
+  command: netctl reenable lan
+  become: true
+
+- name: start lan profile
+  command: netctl restart lan
+  become: true

@@ -1,0 +1,14 @@
+Description='Lan Bridge'
+Interface=br0
+Connection=bridge
+BindsToInterfaces=({{ lan_interfaces | join(' ') }})
+IP=static
+Address=('{{ lan_primary_address }}')
+{% if lan_secondary_addresses | length > 0 %}
+IPCustom=(
+{% for address in lan_secondary_addresses %}
+  'addr add {{ address }} dev br0 label br0:{{ loop.index }}'
+{% endfor %}
+)
+{% endif %}
+SkipForwardingDelay=yes

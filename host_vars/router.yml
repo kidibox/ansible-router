@@ -8,4 +8,7 @@ rename_interfaces:
   - name: lan1
     macaddress: "00:0d:b9:4b:f8:4a"
 
-dnsmasq_listen_interface: lan0
+wan_interface: wan0
+lan_interfaces: [lan0, lan1]
+
+dnsmasq_listen_interface: br0

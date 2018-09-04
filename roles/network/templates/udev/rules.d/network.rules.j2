@@ -1,0 +1,3 @@
+{% for item in rename_interfaces %}
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="{{ item.macaddress | lower }}", NAME="{{ item.name }}"
+{% endfor %}

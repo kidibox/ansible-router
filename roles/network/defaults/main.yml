@@ -1,8 +1,13 @@
 ---
 
 rename_interfaces: []
-wan_interface: wan0
+
+wan_interface: eth0
+lan_interfaces: [eth1, eth2]
 
 ppp_provider: test
 ppp_username: abcd
 ppp_password: password
+
+lan_primary_address: '192.168.0.1/24'
+lan_secondary_addresses: ['192.168.0.2/24']
