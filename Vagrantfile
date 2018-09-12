@@ -1,4 +1,7 @@
-base_setup = "pacman -Sy --noconfirm --noprogressbar bash-completion net-tools python vim"
+base_setup = <<~SCRIPT
+pacman-key --populate archlinux
+pacman -Suy --noconfirm --noprogressbar bash-completion bind-tools net-tools python vim --ignore linux
+SCRIPT
 
 disable_nat = <<~SCRIPT
 cat <<EOT > /etc/systemd/network/eth0.network
@@ -45,6 +48,7 @@ Vagrant.configure('2') do |config|
     isp.vm.hostname = 'isp'
     isp.vm.network 'private_network', virtualbox__intnet: 'pppoe'
     isp.vm.provision 'shell', inline: <<~SCRIPT
+    pacman-key --populate archlinux
     pacman -Sy --noconfirm rp-pppoe
 
     cat <<EOT > /etc/ppp/pppoe-server-options
@@ -111,6 +115,11 @@ Vagrant.configure('2') do |config|
     router.vm.network 'private_network', mac: '000db94bf849', virtualbox__intnet: 'lan1'
     router.vm.network 'private_network', mac: '000db94bf84a', virtualbox__intnet: 'lan2'
 
+    router.vm.provider 'virtualbox' do |virtualbox|
+      virtualbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+      virtualbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+    end
+
     router.vm.provision 'shell', run: 'once', inline: base_setup
     router.vm.provision 'ansible' do |ansible|
       ansible.limit = 'all'
@@ -121,12 +130,13 @@ Vagrant.configure('2') do |config|
       }
     end
     router.vm.provision 'shell', run: 'once', inline: disable_nat
+    router.vm.provision 'shell', run: 'once', inline: 'netctl restart wan && netctl wait-online wan'
   end
 
   config.vm.define 'client1' do |client1|
     client1.vm.hostname = 'client1'
     client1.vm.network 'private_network', virtualbox__intnet: 'lan1'
-    client1.vm.provision 'shell', run: 'once', inline: 'rm /etc/systemd/system/netctl@eth*'
+    client1.vm.provision 'shell', run: 'once', inline: base_setup
     client1.vm.provision 'shell', run: 'once', inline: disable_nat
     client1.vm.provision 'shell', run: 'once', inline: setup_dhcp
   end
@@ -134,6 +144,7 @@ Vagrant.configure('2') do |config|
   config.vm.define 'client2' do |client2|
     client2.vm.hostname = 'client2'
     client2.vm.network 'private_network', virtualbox__intnet: 'lan2'
+    client2.vm.provision 'shell', run: 'once', inline: base_setup
     client2.vm.provision 'shell', run: 'once', inline: disable_nat
     client2.vm.provision 'shell', run: 'once', inline: setup_dhcp
   end
