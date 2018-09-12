@@ -17,7 +17,7 @@ end
 
 host = ENV['TARGET_HOST']
 
-`vagrant up #{host}`
+`vagrant up`
 
 config = Tempfile.new('', Dir.tmpdir)
 config.write(`vagrant ssh-config #{host}`)
