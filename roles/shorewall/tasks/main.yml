@@ -1,0 +1,44 @@
+---
+
+- name: ensure shorewall is installed
+  package:
+    name: "{{ item }}"
+    state: installed
+  become: true
+  loop:
+    - shorewall
+  notify:
+    - enable shorewall
+    - start shorewall
+
+- name: template configs
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/shorewall/{{ item }}"
+    backup: true
+  become: true
+  loop:
+    - interfaces
+    - policy
+    - rules
+    - snat
+    - stoppedrules
+    - zones
+  notify:
+    - reload shorewall
+
+- name: update shorewall.conf
+  lineinfile:
+    path: /etc/shorewall/shorewall.conf
+    regexp: "{{ item.regex }}"
+    line: "{{ item.line }}"
+  loop:
+    - line: "STARTUP_ENABLED=Yes"
+      regex: "^STARTUP_ENABLED="
+    - line: "LOGFILE=systemd"
+      regex: "^LOGFILE="
+    - line: "IP_FORWARDING=Yes"
+      regex: "^IP_FORWARDING="
+  become: true
+  notify:
+    - reload shorewall

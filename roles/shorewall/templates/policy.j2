@@ -1,0 +1,8 @@
+###############################################################################
+#SOURCE DEST            POLICY          LOGLEVEL        RATE    CONNLIMIT
+# We might not need this?
+$FW     net             ACCEPT
+loc     net             ACCEPT
+net     all             DROP            $LOG_LEVEL
+# THE FOLOWING POLICY MUST BE LAST
+all     all             REJECT          $LOG_LEVEL

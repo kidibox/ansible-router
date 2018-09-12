@@ -1,0 +1,3 @@
+##########################################################################################################################################
+#ACTION                 SOURCE                  DEST            PROTO   PORT    IPSEC   MARK    USER    SWITCH  ORIGDEST    PROBABILITY
+MASQUERADE              {{ "%-23s" | format(masquerade_network) }} {{ net_interface }}

@@ -5,4 +5,5 @@
   - role: network
   - role: dnsmasq
     listen_interface: "{{ dnsmasq_listen_interface }}"
+  - role: shorewall
   - role: yay

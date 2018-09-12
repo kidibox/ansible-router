@@ -1,0 +1,11 @@
+###############################################################################
+?FORMAT 2
+###############################################################################
+#ZONE   INTERFACE       OPTIONS
+net     {{ "%-15s" | format(net_interface) }} dhcp,tcpflags,nosmurfs,routefilter,logmartians
+{% for loc_interface in loc_interfaces %}
+loc     {{ "%-15s" | format(loc_interface) }} dhcp,tcpflags,nosmurfs,routefilter,logmartians
+{% endfor %}
+{% if is_vagrant %}
+loc     eth0
+{% endif %}

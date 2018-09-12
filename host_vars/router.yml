@@ -12,3 +12,7 @@ wan_interface: wan0
 lan_interfaces: [lan0, lan1]
 
 dnsmasq_listen_interface: br0
+
+net_interface: ppp0
+loc_interfaces: [br0]
+internal_network: 192.168.0.0/24

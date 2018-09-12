@@ -1,0 +1,23 @@
+---
+
+- name: enable shorewall
+  service:
+    name: shorewall
+    enabled: true
+  become: true
+
+- name: start shorewall
+  service:
+    name: shorewall
+    state: started
+  async: 1
+  become: true
+  poll: 0
+
+- name: reload shorewall
+  service:
+    name: shorewall
+    state: reloaded
+  async: 1
+  become: true
+  poll: 0
