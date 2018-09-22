@@ -32,16 +32,3 @@
     - dns
   notify:
     - restart dnsmasq
-
-- meta: flush_handlers
-
-- name: disable systemd-resolved
-  service:
-    name: systemd-resolved
-    state: stopped
-    enabled: false
-  become: true
-
-- name: udapte resolv.conf
-  command: resolvconf -u
-  become: true

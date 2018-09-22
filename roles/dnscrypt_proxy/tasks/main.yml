@@ -45,5 +45,3 @@
   become: true
   notify:
     - restart dnscrypt-proxy
-
-- meta: flush_handlers

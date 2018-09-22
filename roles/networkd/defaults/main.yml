@@ -1,0 +1,18 @@
+---
+
+rename_interfaces:
+  - name: wan0
+    macaddress: "00:0d:b9:4b:f8:48"
+  - name: lan0
+    macaddress: "00:0d:b9:4b:f8:49"
+  - name: lan1
+    macaddress: "00:0d:b9:4b:f8:4a"
+
+
+wan_interface: wan0
+
+bridge_interface: br0
+bridge_slaves: [lan0, lan1]
+
+bridge_addresses:
+  - "{{ internal_network | ipaddr('1') }}"

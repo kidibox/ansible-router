@@ -1,0 +1,22 @@
+---
+
+- name: restart systemd-networkd
+  service:
+    name: systemd-networkd
+    state: restarted
+  become: true
+
+- name: restart systemd-resolved
+  service:
+    name: systemd-resolved
+    state: restarted
+  become: true
+
+- name: reboot
+  shell: 'sleep 1 && shutdown -r now "Reboot triggered by Ansible" && sleep 1'
+  async: 1
+  poll: 0
+
+- name: wait
+  wait_for_connection:
+    timeout: 900

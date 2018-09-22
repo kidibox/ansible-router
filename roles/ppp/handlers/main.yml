@@ -1,0 +1,13 @@
+---
+
+- name: start ppp
+  service:
+    name: "ppp@{{ ppp_provider }}.service"
+    state: started
+  become: true
+
+- name: restart ppp
+  service:
+    name: "ppp@{{ ppp_provider }}.service"
+    state: restarted
+  become: true

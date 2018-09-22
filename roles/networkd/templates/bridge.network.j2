@@ -1,0 +1,8 @@
+[Match]
+Name={{ bridge_interface }}
+
+[Network]
+{% for addr in bridge_addresses %}
+Address={{ addr }}
+{% endfor %}
+DNS=127.0.0.1

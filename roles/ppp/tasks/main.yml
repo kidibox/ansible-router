@@ -1,0 +1,42 @@
+---
+
+- name: ensure ppp is installed
+  package:
+    name: ppp
+    state: installed
+  become: true
+
+- name: template ppp peer file
+  template:
+    src: provider.j2
+    dest: "/etc/ppp/peers/{{ ppp_provider }}"
+  become: true
+  notify:
+    - restart ppp
+
+- name: enable ppp
+  service:
+    name: "ppp@{{ ppp_provider }}.service"
+    enabled: true
+  become: true
+
+- name: template ppp chap-secrets file
+  template:
+    src: chap-secrets.j2
+    dest: /etc/ppp/chap-secrets
+    mode: "600"
+  become: true
+  notify:
+    - restart ppp
+
+- name: create systemd override directory
+  file:
+    path: "/etc/systemd/system/ppp@{{ ppp_provider }}.service.d"
+    state: directory
+  become: true
+
+- name: template systemd override file
+  template:
+    src: override.conf.j2
+    dest: "/etc/systemd/system/ppp@{{ ppp_provider }}.service.d/override.conf"
+  become: true

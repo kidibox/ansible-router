@@ -1,0 +1,4 @@
+[Unit]
+Before=
+BindsTo=sys-subsystem-net-devices-{{ ppp_interface }}.device
+After=sys-subsystem-net-devices-{{ ppp_interface }}.device

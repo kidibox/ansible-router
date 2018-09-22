@@ -42,5 +42,3 @@
   become: true
   notify:
     - reload shorewall
-
-- meta: flush_handlers

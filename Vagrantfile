@@ -60,7 +60,7 @@ Vagrant.configure('2') do |config|
     lcp-echo-failure 2
     ms-dns 1.1.1.1
     ms-dns 1.0.0.1
-    netmask 255.255.255.0
+    netmask 255.255.255.255
     defaultroute
     noipdefault
     usepeerdns
@@ -131,7 +131,7 @@ Vagrant.configure('2') do |config|
         is_vagrant: true
       }
     end
-    router.vm.provision 'shell', run: 'once', inline: disable_nat
+    # router.vm.provision 'shell', run: 'once', inline: disable_nat
   end
 
   config.vm.define 'client1' do |client1|

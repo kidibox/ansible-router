@@ -1,0 +1,8 @@
+plugin rp-pppoe.so
+{{ ppp_interface }}
+name "{{ ppp_username }}"
+holdoff 0
+persist
+defaultroute
+hide-password
+noauth

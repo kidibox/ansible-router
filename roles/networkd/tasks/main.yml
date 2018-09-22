@@ -1,0 +1,68 @@
+---
+
+- name: enable systemd-networkd
+  service:
+    name: systemd-networkd
+    enabled: true
+  become: true
+
+- name: enable systemd-resolved
+  service:
+    name: systemd-resolved
+    enabled: true
+  become: true
+
+- name: rename interfaces
+  template:
+    src: interface.link.j2
+    dest: /etc/systemd/network/00-{{ item.name }}.link
+  become: true
+  loop: "{{ rename_interfaces }}"
+  notify:
+    - reboot
+    - wait
+
+- name: template bridge netdev
+  template:
+    src: bridge.netdev.j2
+    dest: "/etc/systemd/network/10-{{ bridge_interface }}.netdev"
+  become: true
+  notify:
+    - restart systemd-networkd
+
+- name: template bridge network
+  template:
+    src: bridge.network.j2
+    dest: "/etc/systemd/network/20-{{ bridge_interface }}.network"
+  become: true
+  notify:
+    - restart systemd-networkd
+    - restart systemd-resolved
+
+- name: template bridge slaves
+  template:
+    src: bridge_member.network.j2
+    dest: "/etc/systemd/network/20-{{ item }}.network"
+  become: true
+  loop: "{{ bridge_slaves }}"
+  notify:
+    - restart systemd-networkd
+    - restart systemd-resolved
+
+- name: template wan network
+  template:
+    src: wan.network.j2
+    dest: "/etc/systemd/network/20-{{ wan_interface }}.network"
+  become: true
+  notify:
+    - restart systemd-networkd
+    - restart systemd-resolved
+
+- name: disable vagrant's nat
+  template:
+    src: vagrant.network.j2
+    dest: /etc/systemd/network/eth0.network
+  become: true
+  when:
+    - is_vagrant is defined
+    - is_vagrant | bool

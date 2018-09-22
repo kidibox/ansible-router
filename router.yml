@@ -2,9 +2,16 @@
 
 - hosts: router
   roles:
-  - role: network
-  - role: dnscrypt_proxy
-  - role: dnsmasq
-    listen_interface: "{{ dnsmasq_listen_interface }}"
-  - role: shorewall
-  - role: yay
+    - role: networkd
+    - role: ppp
+    - role: dnscrypt_proxy
+    - role: dnsmasq
+      listen_interface: "{{ dnsmasq_listen_interface }}"
+
+- hosts: router
+  tasks:
+    - meta: flush_handlers
+
+- hosts: router
+  roles:
+    - role: shorewall
