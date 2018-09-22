@@ -15,4 +15,13 @@ dnsmasq_listen_interface: br0
 
 net_interface: ppp0
 loc_interfaces: [br0]
-internal_network: 192.168.0.0/24
+internal_network: 10.0.1.0/24
+
+dhcp_hosts:
+  - hostname: nas
+    ipv4: "{{ internal_network | ipaddr('10') | ipaddr('address') }}"
+    hwaddr: '32:88:5a:37:d9:a8'
+
+domain_name: home.kidibox.net
+domain_search:
+  - home.kidibox.net

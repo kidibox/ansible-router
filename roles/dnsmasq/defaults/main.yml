@@ -13,3 +13,5 @@ dhcp_dns_servers:
 domain_name: lan
 domain_search:
   - lan
+
+dhcp_hosts: []

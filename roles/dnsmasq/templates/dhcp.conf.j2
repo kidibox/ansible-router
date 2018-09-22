@@ -11,3 +11,7 @@ dhcp-option=option:router,{{ dhcp_router }}
 dhcp-option=option:dns-server,{{ dhcp_dns_servers | join(',') }}
 dhcp-option=option:domain-name,{{ domain_name }}
 dhcp-option=option:domain-search,{{ domain_search | join(',') }}
+
+{% for item in dhcp_hosts %}
+dhcp-host={{ item.hwaddr }},{{ item.ipv4 }},{{ item.hostname }}
+{% endfor %}

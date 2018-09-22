@@ -136,7 +136,7 @@ Vagrant.configure('2') do |config|
 
   config.vm.define 'client1' do |client1|
     # client1.vm.hostname = 'client1'
-    client1.vm.network 'private_network', virtualbox__intnet: 'lan1'
+    client1.vm.network 'private_network', virtualbox__intnet: 'lan1', mac: '32885a37d9a8'
     client1.vm.provision 'shell', run: 'once', inline: base_setup
     client1.vm.provision 'shell', run: 'once', inline: disable_nat
     client1.vm.provision 'shell', run: 'once', inline: setup_dhcp
