@@ -3,6 +3,7 @@
 - hosts: router
   roles:
   - role: network
+  - role: dnscrypt_proxy
   - role: dnsmasq
     listen_interface: "{{ dnsmasq_listen_interface }}"
   - role: shorewall

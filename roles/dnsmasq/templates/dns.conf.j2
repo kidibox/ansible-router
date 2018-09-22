@@ -1,0 +1,17 @@
+listen-address=::1,127.0.0.1,192.168.0.1
+
+log-queries
+cache-size=1000
+
+conf-file=/usr/share/dnsmasq/trust-anchors.conf
+dnssec
+dnssec-check-unsigned
+
+domain-needed
+bogus-priv
+
+no-resolv
+expand-hosts
+
+server=::1#5353
+server=127.0.0.1#5353

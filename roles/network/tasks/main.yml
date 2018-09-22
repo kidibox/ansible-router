@@ -5,6 +5,7 @@
     name: ppp
     state: installed
   become: true
+  tags: [ppp]
 
 - name: create udev rules
   template:
@@ -23,14 +24,25 @@
     src: netctl/wan.j2
     dest: /etc/netctl/wan
   become: true
+  tags: [ppp]
 
 - name: enable wan profile
   command: netctl reenable wan
   become: true
+  tags: [ppp]
+
+- name: remove vagrant route
+  command: ip route del default via 10.0.2.2
+  become: true
+  ignore_errors: true
+  when:
+    - is_vagrant is defined
+    - is_vagrant | bool
 
 - name: start wan profile
   command: netctl restart wan
   become: true
+  tags: [ppp]
 
 - name: create lan profile
   template:
@@ -45,3 +57,5 @@
 - name: start lan profile
   command: netctl restart lan
   become: true
+
+- meta: flush_handlers

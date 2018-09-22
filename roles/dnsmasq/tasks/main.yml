@@ -19,13 +19,29 @@
     path: /etc/dnsmasq.conf
     line: "conf-dir=/etc/dnsmasq.d/,*.conf"
   notify:
-    - reload dnsmasq
+    - restart dnsmasq
   become: true
 
-- name: configure dhcp server
+- name: configure dnsmasq
   template:
-    src: dhcp.conf.j2
-    dest: "/etc/dnsmasq.d/dhcp.conf"
+    src: "{{ item }}.conf.j2"
+    dest: "/etc/dnsmasq.d/{{ item }}.conf"
   become: true
+  loop:
+    - dhcp
+    - dns
   notify:
-    - reload dnsmasq
+    - restart dnsmasq
+
+- meta: flush_handlers
+
+- name: disable systemd-resolved
+  service:
+    name: systemd-resolved
+    state: stopped
+    enabled: false
+  become: true
+
+- name: udapte resolv.conf
+  command: resolvconf -u
+  become: true

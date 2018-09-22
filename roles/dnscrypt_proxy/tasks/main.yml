@@ -1,0 +1,49 @@
+---
+
+- name: ensure packages are installed
+  package:
+    name: "dnscrypt-proxy"
+    state: installed
+  become: true
+  notify:
+    - enable dnscrypt-proxy
+    - start dnscrypt-proxy
+
+- name: create systemd override directory
+  file:
+    path: /etc/systemd/system/dnscrypt-proxy.socket.d
+    state: directory
+  become: true
+
+- name: template systemd override file
+  template:
+    src: systemd/override.conf
+    dest: /etc/systemd/system/dnscrypt-proxy.socket.d/override.conf
+  become: true
+  notify:
+    - daemon-reload
+    - restart dnscrypt-proxy
+
+- name: update configuration
+  lineinfile:
+    path: /etc/dnscrypt-proxy/dnscrypt-proxy.toml
+    regexp: "{{ item.regex }}"
+    line: "{{ item.line }}"
+  loop:
+    - line: "server_names = ['cloudflare', 'cloudflare-ipv6']"
+      regex: '^(#\s*)?server_names\s*='
+    - line: "listen_addresses = []"
+      regex: '^listen_addresses\s*='
+    - line: "dnscrypt_servers = true"
+      regex: '^dnscrypt_servers\s*='
+    - line: "require_dnssec = true"
+      regex: '^require_dnssec\s*='
+    - line: "ignore_system_dns = true"
+      regex: '^ignore_system_dns\s*='
+    - line: "use_syslog = false"
+      regex: '^use_syslog\s*='
+  become: true
+  notify:
+    - restart dnscrypt-proxy
+
+- meta: flush_handlers

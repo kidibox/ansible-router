@@ -6,6 +6,6 @@ net     {{ "%-15s" | format(net_interface) }} dhcp,tcpflags,nosmurfs,routefilter
 {% for loc_interface in loc_interfaces %}
 loc     {{ "%-15s" | format(loc_interface) }} dhcp,tcpflags,nosmurfs,routefilter,logmartians
 {% endfor %}
-{% if is_vagrant %}
+{% if is_vagrant | default(false) | bool %}
 loc     eth0
 {% endif %}
