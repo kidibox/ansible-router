@@ -1,4 +1,4 @@
-listen-address=::1,127.0.0.1,192.168.0.1
+listen-address=::1,127.0.0.1,{{ internal_network | ipaddr('1') | ipaddr('address') }}
 
 log-queries
 cache-size=1000

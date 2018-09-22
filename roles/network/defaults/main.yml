@@ -9,5 +9,5 @@ ppp_provider: test
 ppp_username: abcd
 ppp_password: password
 
-lan_primary_address: '192.168.0.1/24'
+lan_primary_address: "{{ internal_network | ipaddr('1') }}"
 lan_secondary_addresses: []
