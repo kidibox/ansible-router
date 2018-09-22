@@ -1,4 +1,5 @@
 [Unit]
 Before=
+PartOf=systemd-networkd.service
 BindsTo=sys-subsystem-net-devices-{{ ppp_interface }}.device
 After=sys-subsystem-net-devices-{{ ppp_interface }}.device
