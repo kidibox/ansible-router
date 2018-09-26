@@ -9,9 +9,6 @@ rename_interfaces:
     macaddress: "00:0d:b9:4b:f8:4a"
 
 wan_interface: wan0
-# lan_interfaces: [lan0, lan1]
-
-dnsmasq_listen_interface: br0
 
 net_interface: ppp0
 loc_interfaces: [br0]
@@ -25,3 +22,14 @@ dhcp_hosts:
 domain_name: home.kidibox.net
 domain_search:
   - home.kidibox.net
+
+networks:
+  guest:
+    vlan_id: 2
+    subnet: 10.2.0.0/24
+  main:
+    vlan_id: 10
+    subnet: 10.10.0.0/24
+  mgmt:
+    vlan_id: 90
+    subnet: 10.90.0.0/24

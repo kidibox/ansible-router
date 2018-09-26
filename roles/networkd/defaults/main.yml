@@ -12,7 +12,27 @@ rename_interfaces:
 wan_interface: wan0
 
 bridge_interface: br0
+bridge_default_pvid: 2
 bridge_slaves: [lan0, lan1]
 
-bridge_addresses:
-  - "{{ internal_network | ipaddr('1') }}"
+# vlans:
+#   - id: 2
+#     name: guest
+#     addresses: ["10.2.0.1/24"]
+#   - id: 10
+#     name: main
+#     addresses: ["10.10.0.1/24"]
+#   - id: 90
+#     name: mgmt
+#     addresses: ["10.90.0.1/24"]
+
+# networks:
+#   guest:
+#     vlan_id: 2
+#     subnet: 10.2.0.0/24
+#   main:
+#     vlan_id: 10
+#     subnet: 10.10.0.0/24
+#   mgmt:
+#     vlan_id: 90
+#     subnet: 10.90.0.0/24

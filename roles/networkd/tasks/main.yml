@@ -15,7 +15,7 @@
 - name: rename interfaces
   template:
     src: interface.link.j2
-    dest: /etc/systemd/network/00-{{ item.name }}.link
+    dest: /etc/systemd/network/{{ item.name }}.link
   become: true
   loop: "{{ rename_interfaces }}"
   notify:
@@ -25,15 +25,24 @@
 - name: template bridge netdev
   template:
     src: bridge.netdev.j2
-    dest: "/etc/systemd/network/10-{{ bridge_interface }}.netdev"
+    dest: "/etc/systemd/network/{{ bridge_interface }}.netdev"
   become: true
+  notify:
+    - restart systemd-networkd
+
+- name: template vlans netdev
+  template:
+    src: vlan.netdev.j2
+    dest: "/etc/systemd/network/{{ item.key }}.netdev"
+  become: true
+  loop: "{{ networks | dict2items }}"
   notify:
     - restart systemd-networkd
 
 - name: template bridge network
   template:
     src: bridge.network.j2
-    dest: "/etc/systemd/network/20-{{ bridge_interface }}.network"
+    dest: "/etc/systemd/network/{{ bridge_interface }}.network"
   become: true
   notify:
     - restart systemd-networkd
@@ -41,10 +50,20 @@
 
 - name: template bridge slaves
   template:
-    src: bridge_member.network.j2
-    dest: "/etc/systemd/network/20-{{ item }}.network"
+    src: interface.network.j2
+    dest: "/etc/systemd/network/{{ item }}.network"
   become: true
   loop: "{{ bridge_slaves }}"
+  notify:
+    - restart systemd-networkd
+    - restart systemd-resolved
+
+- name: template vlan networks
+  template:
+    src: vlan.network.j2
+    dest: "/etc/systemd/network/{{ item.key }}.network"
+  become: true
+  loop: "{{ networks | dict2items }}"
   notify:
     - restart systemd-networkd
     - restart systemd-resolved
@@ -52,7 +71,7 @@
 - name: template wan network
   template:
     src: wan.network.j2
-    dest: "/etc/systemd/network/20-{{ wan_interface }}.network"
+    dest: "/etc/systemd/network/{{ wan_interface }}.network"
   become: true
   notify:
     - restart systemd-networkd

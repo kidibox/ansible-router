@@ -2,7 +2,11 @@
 Name={{ bridge_interface }}
 
 [Network]
-{% for addr in bridge_addresses %}
-Address={{ addr }}
+{% for network in networks | dict2items | sort(attribute='value.vlan_id') %}
+VLAN={{ network.key }}
 {% endfor %}
-DNS=127.0.0.1
+{% for network in networks | dict2items | sort(attribute='value.vlan_id') %}
+
+[BridgeVLAN]
+VLAN={{ network.value.vlan_id }}
+{% endfor %}
