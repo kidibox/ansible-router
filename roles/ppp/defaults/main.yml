@@ -1,4 +1,6 @@
 ppp_interface: "{{ wan_interface }}"
-ppp_provider: foo
-ppp_username: abcd
-ppp_password: password
+
+required_vars:
+  - ppp_provider
+  - ppp_username
+  - ppp_password

@@ -1,5 +1,11 @@
 ---
 
+- name: check required variables
+  fail:
+    msg: "Variable '{{ item }}' is not defined"
+  when: item not in vars
+  with_items: "{{ required_vars }}"
+
 - name: ensure ppp is installed
   package:
     name: ppp

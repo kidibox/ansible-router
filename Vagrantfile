@@ -69,7 +69,7 @@ Vagrant.configure('2') do |config|
     cat <<EOT > /etc/ppp/chap-secrets
     # Secrets for authentication using CHAP
     # client        server  secret                  IP addresses
-    abcd            *       password                *
+    foo             *       bar                     *
     EOT
 
     cat <<EOT > /etc/systemd/system/pppoe-server.service
@@ -128,7 +128,10 @@ Vagrant.configure('2') do |config|
       ansible.playbook = 'router.yml'
       ansible.raw_arguments = ['--diff']
       ansible.extra_vars = {
-        is_vagrant: true
+        is_vagrant: true,
+        ppp_provider: 'foo',
+        ppp_username: 'bar',
+        ppp_password: 'baz',
       }
     end
     # router.vm.provision 'shell', run: 'once', inline: disable_nat
