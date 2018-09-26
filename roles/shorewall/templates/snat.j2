@@ -1,3 +1,5 @@
 ##########################################################################################################################################
 #ACTION                 SOURCE                  DEST            PROTO   PORT    IPSEC   MARK    USER    SWITCH  ORIGDEST    PROBABILITY
-MASQUERADE              {{ "%-23s" | format(masquerade_network) }} {{ net_interface }}
+{% for item in networks | dict2items | sort(attribute='value.vlan_id') %}
+MASQUERADE              {{ "%-23s" | format(item.value.subnet) }} {{ net_interface }}
+{% endfor %}

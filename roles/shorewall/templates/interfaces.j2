@@ -3,8 +3,8 @@
 ###############################################################################
 #ZONE   INTERFACE       OPTIONS
 net     {{ "%-15s" | format(net_interface) }} dhcp,tcpflags,nosmurfs,routefilter,logmartians
-{% for loc_interface in loc_interfaces %}
-loc     {{ "%-15s" | format(loc_interface) }} dhcp,tcpflags,nosmurfs,routefilter,logmartians
+{% for item in networks | dict2items | sort(attribute='value.vlan_id') %}
+loc     {{ "%-15s" | format(item.key) }} dhcp,tcpflags,nosmurfs,routefilter,logmartians
 {% endfor %}
 {% if is_vagrant | default(false) | bool %}
 loc     eth0

@@ -1,7 +1,7 @@
 ###############################################################################
 #ACTION         SOURCE          DEST            PROTO   DEST            SOURCE
 #                                                       PORT(S)         PORT(S)
-{% for loc_interface in loc_interfaces %}
-ACCEPT          {{ "%-15s" | format(loc_interface) }} -
-ACCEPT          -               {{ loc_interface }}
+{% for item in networks | dict2items | sort(attribute='value.vlan_id') %}
+ACCEPT          {{ "%-15s" | format(item.key) }} -
+ACCEPT          -               {{ item.key }}
 {% endfor %}

@@ -39,6 +39,8 @@
       regex: "^LOGFILE="
     - line: "IP_FORWARDING=Yes"
       regex: "^IP_FORWARDING="
+    - line: "CLAMPMSS=Yes"
+      regex: "^CLAMPMSS="
   become: true
   notify:
     - reload shorewall
