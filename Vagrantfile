@@ -69,7 +69,7 @@ Vagrant.configure('2') do |config|
     cat <<EOT > /etc/ppp/chap-secrets
     # Secrets for authentication using CHAP
     # client        server  secret                  IP addresses
-    foo             *       bar                     *
+    bar             *       baz                     *
     EOT
 
     cat <<EOT > /etc/systemd/system/pppoe-server.service
