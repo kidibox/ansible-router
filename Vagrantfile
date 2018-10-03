@@ -134,11 +134,10 @@ Vagrant.configure('2') do |config|
         ppp_password: 'baz',
       }
     end
-    # router.vm.provision 'shell', run: 'once', inline: disable_nat
   end
 
   config.vm.define 'client1' do |client1|
-    # client1.vm.hostname = 'client1'
+    client1.vm.hostname = 'client1'
     client1.vm.network 'private_network', virtualbox__intnet: 'lan1', mac: '32885a37d9a8'
     client1.vm.provision 'shell', run: 'once', inline: base_setup
     client1.vm.provision 'shell', run: 'once', inline: disable_nat
@@ -146,7 +145,7 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.define 'client2' do |client2|
-    # client2.vm.hostname = 'client2'
+    client2.vm.hostname = 'client2'
     client2.vm.network 'private_network', virtualbox__intnet: 'lan2'
     client2.vm.provision 'shell', run: 'once', inline: base_setup
     client2.vm.provision 'shell', run: 'once', inline: disable_nat
