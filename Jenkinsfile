@@ -1,10 +1,16 @@
 pipeline {
   agent any
 
+  environment {
+    PATH = "${JENKINS_HOME}/.rbenv/bin:${JENKINS_HOME}/.rbenv/shims:${PATH}"
+    RBENV_VERSION = "2.4.1"
+  }
+
   stages {
     stage('bundler') {
       steps {
-        sh('bundler install')
+        sh 'rbenv install --skip-existing $RBENV_VERSION'
+        sh 'bundle install'
       }
     }
     stage('vagrant up') {
