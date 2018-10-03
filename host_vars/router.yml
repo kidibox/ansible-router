@@ -11,7 +11,6 @@ rename_interfaces:
 wan_interface: wan0
 
 net_interface: ppp0
-loc_interfaces: [br0]
 internal_network: 10.1.0.0/24
 
 dhcp_hosts:
@@ -27,9 +26,13 @@ networks:
   guest:
     vlan_id: 2
     subnet: 10.2.0.0/24
-  main:
+  lan:
     vlan_id: 10
     subnet: 10.10.0.0/24
   mgmt:
     vlan_id: 90
     subnet: 10.90.0.0/24
+
+upstream_servers:
+  - "::1#5353"
+  - "127.0.0.1#5353"

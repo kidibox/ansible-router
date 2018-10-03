@@ -1,17 +1,10 @@
 ---
 
-listen_interface: eth0
-
-dhcp_range_start: "{{ internal_network | ipaddr('100') | ipaddr('address') }}"
-dhcp_range_end: "{{ internal_network | ipaddr('200') | ipaddr('address') }}"
-dhcp_netmask: "{{ internal_network | ipaddr('netmask') }}"
-
-dhcp_router: "{{ internal_network | ipaddr('1') | ipaddr('address') }}"
-dhcp_dns_servers:
-  - "{{ internal_network | ipaddr('1') | ipaddr('address') }}"
-
 domain_name: lan
 domain_search:
   - lan
 
 dhcp_hosts: []
+
+upstream_servers:
+  - 1.1.1.1

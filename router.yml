@@ -6,11 +6,6 @@
     - role: ppp
     - role: dnscrypt_proxy
     - role: dnsmasq
-      listen_interface: "{{ dnsmasq_listen_interface }}"
-
-- hosts: router
-  tasks:
-    - meta: flush_handlers
 
 - hosts: router
   roles:

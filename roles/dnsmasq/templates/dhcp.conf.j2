@@ -1,17 +1,21 @@
-interface={{ listen_interface }}
-bind-interfaces
+interface=lo
+{% for item in networks | dict2items | sort(attribute='value.vlan_id') %}
+interface={{ item.key }}
+{% endfor %}
 
-local=/{{ domain_name|default('lan') }}/
-domain={{ domain_name|default('lan') }}
+{% for item in networks | dict2items | sort(attribute='value.vlan_id') %}
+domain={{ item.values.domain_name | default(item.key) }},{{ item.value.subnet }},local
+{% endfor %}
 
 dhcp-authoritative
-dhcp-range={{ dhcp_range_start }},{{ dhcp_range_end }},{{ dhcp_netmask }},1h
 
-dhcp-option=option:router,{{ dhcp_router }}
-dhcp-option=option:dns-server,{{ dhcp_dns_servers | join(',') }}
-dhcp-option=option:domain-name,{{ domain_name }}
-dhcp-option=option:domain-search,{{ domain_search | join(',') }}
+{% for item in networks | dict2items | sort(attribute='value.vlan_id') %}
+dhcp-range=interface:{{ item.key }},{{ item.value.subnet | ipaddr(100) | ipaddr('address') }},{{ item.value.subnet | ipaddr(200) | ipaddr('address') }},{{ item.value.subnet | ipaddr('netmask') }},1h
+{% endfor %}
 
-{% for item in dhcp_hosts %}
-dhcp-host={{ item.hwaddr }},{{ item.ipv4 }},{{ item.hostname }}
+{% for item in networks | dict2items | sort(attribute='value.vlan_id') %}
+dhcp-option=interface:{{ item.key }},option:router,{{ item.value.subnet | ipaddr(1) | ipaddr('address') }}
+dhcp-option=interface:{{ item.key }},option:dns-server,{{ item.value.subnet | ipaddr(1) | ipaddr('address') }}
+dhcp-option=interface:{{ item.key }},option:domain-name,{{ item.values.domain_name | default(item.key) }}
+dhcp-option=interface:{{ item.key }},option:domain-search,{{ item.values.domain_search | default(item.values.domain_name) | default(item.key) }}
 {% endfor %}

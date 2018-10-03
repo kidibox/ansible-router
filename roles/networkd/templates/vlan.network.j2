@@ -3,3 +3,5 @@ Name={{ item.key }}
 
 [Network]
 Address={{ item.value.subnet | ipaddr(1) }}
+DNS=127.0.0.1
+Domains={{ item.key }}
