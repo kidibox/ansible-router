@@ -22,6 +22,12 @@ pipeline {
         sh 'pipenv install'
       }
     }
+    stage('lint') {
+      steps {
+        sh('pipenv run yamllint --strict .')
+        sh('pipenv run ansible-lint .')
+      }
+    }
     stage('build') {
       steps {
         sh('pipenv run bundle exec vagrant up')
