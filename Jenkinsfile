@@ -2,31 +2,40 @@ pipeline {
   agent any
 
   environment {
-    PATH = "${JENKINS_HOME}/.rbenv/bin:${JENKINS_HOME}/.rbenv/shims:${PATH}"
+    PATH = "${JENKINS_HOME}/.rbenv/bin:${JENKINS_HOME}/.rbenv/shims:${JENKINS_HOME}/.local/bin:${PATH}"
+    HOME = "${JENKINS_HOME}"
     RBENV_VERSION = "2.4.1"
   }
 
+  options {
+    ansiColor('xterm')
+    timestamps()
+  }
+
   stages {
-    stage('bundler') {
+    stage('deps') {
       steps {
         sh 'rbenv install --skip-existing $RBENV_VERSION'
+        sh 'gem install bundler --no-ri --no-rdoc'
+        sh 'rbenv rehash'
         sh 'bundle install'
+        sh 'pipenv install'
       }
     }
-    stage('vagrant up') {
+    stage('build') {
       steps {
-        sh('vagrant up')
+        sh('pipenv run bundle exec vagrant up')
       }
     }
-    stage('rake spec') {
+    stage('test') {
       steps {
-        sh('rake spec')
+        sh('pipenv run rake spec')
       }
     }
   }
   post {
     cleanup {
-      sh('vagrant destroy -f')
+      sh('pipenv run bundle exec vagrant destroy -f')
     }
   }
 }
