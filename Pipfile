@@ -8,6 +8,8 @@ name = "pypi"
 [packages]
 ansible = "*"
 netaddr = "*"
+yamllint = "*"
+ansible-lint = "*"
 
 [requires]
 python_version = "2.7"

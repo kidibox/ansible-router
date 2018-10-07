@@ -19,7 +19,6 @@ namespace :spec do
     RSpec::Core::RakeTask.new(short_name) do |t|
       ENV['TARGET_HOST'] = host
       t.pattern = "spec/{base,#{role}}/*_spec.rb"
-      t.fail_on_error = false
     end
   end
 end

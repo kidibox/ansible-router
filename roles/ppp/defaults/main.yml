@@ -1,3 +1,5 @@
+---
+
 ppp_interface: "{{ wan_interface }}"
 
 required_vars:
