@@ -1,12 +1,18 @@
 ---
 
+- hosts: all
+  gather_facts: true
+
 - hosts: router
   roles:
     - role: networkd
+      tags: [network]
     - role: ppp
-    - role: dnscrypt_proxy
+      tags: [network, wan]
     - role: dnsmasq
+      tags: [dns]
 
 - hosts: router
   roles:
     - role: shorewall
+      tags: [firewall]
