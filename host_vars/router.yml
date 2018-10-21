@@ -9,18 +9,10 @@ rename_interfaces:
     macaddress: "00:0d:b9:4b:f8:4a"
 
 wan_interface: wan0
-
 net_interface: ppp0
-internal_network: 10.1.0.0/24
 
-dhcp_hosts:
-  - hostname: nas
-    ipv4: "{{ internal_network | ipaddr('10') | ipaddr('address') }}"
-    hwaddr: '32:88:5a:37:d9:a8'
-
-domain_name: home.kidibox.net
-domain_search:
-  - home.kidibox.net
+default_domain: home
+external_domain: home.kidibox.net
 
 networks:
   guest:

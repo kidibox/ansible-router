@@ -3,11 +3,13 @@ interface=lo
 interface={{ item.key }}
 {% endfor %}
 
+domain={{ default_domain }}
 {% for item in networks | dict2items | sort(attribute='value.vlan_id') %}
 domain={{ item.values.domain_name | default(item.key) }},{{ item.value.subnet }},local
 {% endfor %}
 
 dhcp-authoritative
+dhcp-fqdn
 
 {% for item in networks | dict2items | sort(attribute='value.vlan_id') %}
 dhcp-range=interface:{{ item.key }},{{ item.value.subnet | ipaddr(100) | ipaddr('address') }},{{ item.value.subnet | ipaddr(200) | ipaddr('address') }},{{ item.value.subnet | ipaddr('netmask') }},1h
