@@ -2,6 +2,8 @@
 all:
   hosts:
     router:
-      ansible_host: 192.168.1.194
+      ansible_host: router.lan
+    traefik:
+      ansible_host: nas.lan
   vars:
     ansible_user: ansible

@@ -34,4 +34,8 @@ Ping(DROP)      net             $FW
 
 ACCEPT          $FW             loc             icmp
 ACCEPT          $FW             net             icmp
-#
+
+{% if 'traefik' in hostvars %}
+DNAT            net             {{ "%-23s" | format("loc:" + hostvars['traefik']['ansible_default_ipv4']['address'] + ":80") }} tcp     80
+DNAT            net             {{ "%-23s" | format("loc:" + hostvars['traefik']['ansible_default_ipv4']['address'] + ":443") }} tcp     443
+{% endif %}

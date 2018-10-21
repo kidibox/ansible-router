@@ -14,3 +14,7 @@ localise-queries
 {% for upstream in upstream_servers %}
 server={{ upstream }}
 {% endfor %}
+
+{% if 'traefik' in hostvars %}
+address=/.{{ external_domain }}/{{ hostvars['traefik']['ansible_default_ipv4']['address'] }}
+{% endif %}
