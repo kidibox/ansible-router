@@ -32,6 +32,7 @@ pipeline {
     }
     stage('build') {
       steps {
+        sh('bundle exec vagrant box update')
         // We are using pipenv here because vagrant will call ansible
         sh('pipenv run bundle exec vagrant up')
       }
