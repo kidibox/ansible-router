@@ -3,3 +3,12 @@ Name={{ item }}
 
 [Network]
 Bridge={{ bridge_interface }}
+{% for network in networks | dict2items | sort(attribute='value.vlan_id') %}
+
+[BridgeVLAN]
+VLAN={{ network.value.vlan_id }}
+{% if is_vagrant | default(false) | bool and network.key == "guest" %}
+PVID={{ network.value.vlan_id }}
+EgressUntagged={{ network.value.vlan_id }}
+{% endif %}
+{% endfor %}
