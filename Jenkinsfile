@@ -27,10 +27,12 @@ pipeline {
       steps {
         sh('pipenv run yamllint --strict .')
         sh('pipenv run ansible-lint .')
+        sh('bundle exec rubocop .')
       }
     }
     stage('build') {
       steps {
+        // We are using pipenv here because vagrant will call ansible
         sh('pipenv run bundle exec vagrant up')
       }
     }
@@ -42,7 +44,7 @@ pipeline {
   }
   post {
     cleanup {
-      sh('pipenv run bundle exec vagrant destroy -f')
+      sh('bundle exec vagrant destroy -f')
     }
   }
 }
