@@ -41,7 +41,7 @@ SCRIPT
 
 setup_pppoe = <<~SCRIPT
   pacman-key --populate archlinux
-  pacman -Sy --noconfirm rp-pppoe
+  pacman -Sy --noconfirm rp-pppoe python
 
   cat <<EOT > /etc/ppp/pppoe-server-options
   require-chap
@@ -102,6 +102,10 @@ SCRIPT
 # rubocop:disable Metrics/BlockLength
 Vagrant.configure('2') do |config|
   config.vm.box = 'archlinux/archlinux'
+
+  config.vm.provider 'virtualbox' do |v|
+    v.linked_clone = true
+  end
 
   config.vm.provision 'shell', inline: <<~SCRIPT
     for name in $( ls /sys/class/net | grep eth ); do
