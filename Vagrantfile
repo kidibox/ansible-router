@@ -103,10 +103,6 @@ SCRIPT
 Vagrant.configure('2') do |config|
   config.vm.box = 'archlinux/archlinux'
 
-  config.vm.provider 'virtualbox' do |v|
-    v.linked_clone = true
-  end
-
   config.vm.provision 'shell', inline: <<~SCRIPT
     for name in $( ls /sys/class/net | grep eth ); do
       systemctl disable "netctl@${name}.service"
