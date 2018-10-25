@@ -39,7 +39,7 @@ pipeline {
     }
     stage('test') {
       steps {
-        sh('pipenv run rake spec')
+        sh('bundle exec rake spec')
       }
     }
   }
