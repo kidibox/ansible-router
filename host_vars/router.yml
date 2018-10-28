@@ -21,6 +21,12 @@ networks:
   lan:
     vlan_id: 10
     subnet: 10.10.0.0/24
+  svc:
+    vlan_id: 20
+    subnet: 10.20.0.0/24
+  lab:
+    vlan_id: 50
+    subnet: 10.50.0.0/24
   mgmt:
     vlan_id: 90
     subnet: 10.90.0.0/24
