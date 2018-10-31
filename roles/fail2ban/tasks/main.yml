@@ -1,0 +1,20 @@
+---
+
+- name: ensures fail2ban is installed
+  package:
+    name: fail2ban
+    state: present
+  become: true
+  notify:
+    - enable fail2ban
+    - start fail2ban
+
+- name: template configs
+  template:
+    src: "etc/fail2ban/{{ item }}.j2"
+    dest: "/etc/fail2ban/{{ item }}"
+  become: true
+  loop:
+    - jail.local
+  notify:
+    - reload fail2ban

@@ -1,0 +1,22 @@
+---
+
+- name: enable fail2ban
+  service:
+    name: fail2ban
+    enabled: true
+  become: true
+
+- name: start fail2ban
+  service:
+    name: fail2ban
+    state: started
+  become: true
+
+
+- name: reload fail2ban
+  service:
+    name: fail2ban
+    state: reloaded
+  async: 1
+  become: true
+  poll: 0

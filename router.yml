@@ -15,4 +15,7 @@
 - hosts: router
   roles:
     - role: shorewall
-      tags: [firewall]
+      tags: [shorewall, firewall]
+    - role: fail2ban
+      banaction: shorewall
+      tags: [fail2ban, firewall]

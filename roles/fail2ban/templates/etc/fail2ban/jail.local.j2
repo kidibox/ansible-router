@@ -1,0 +1,10 @@
+[DEFAULT]
+{% if banaction %}
+banaction = {{ banaction }}
+banaction_multiports = {{ banaction_ultiports | default(banaction) }}
+{% endif %}
+{% for jail in jails_enabled | default([]) %}
+
+[{{ jail }}]
+enabled = true
+{% endfor %}
