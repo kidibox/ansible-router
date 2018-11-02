@@ -8,9 +8,9 @@
     - role: networkd
       tags: [network]
     - role: ppp
-      tags: [network, wan]
+      tags: [ppp, network]
     - role: dnsmasq
-      tags: [dns]
+      tags: [dnsmasq, dns]
 
 - hosts: router
   roles:
