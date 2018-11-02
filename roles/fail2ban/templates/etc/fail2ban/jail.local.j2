@@ -1,4 +1,5 @@
 [DEFAULT]
+backend = systemd
 {% if banaction %}
 banaction = {{ banaction }}
 banaction_multiports = {{ banaction_ultiports | default(banaction) }}
