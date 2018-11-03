@@ -19,10 +19,13 @@
   become: true
   loop:
     - interfaces
+    - mangle
     - policy
     - rules
     - snat
     - stoppedrules
+    - tcdevices
+    - tcclasses
     - zones
   notify:
     - reload shorewall

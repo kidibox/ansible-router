@@ -1,0 +1,15 @@
+# ICMP ping
+MARK(1-2)       0.0.0.0/0       0.0.0.0/0       icmp    echo-request
+MARK(1-2)       0.0.0.0/0       0.0.0.0/0       icmp    echo-reply
+
+# ssh
+MARK(1-2)       0.0.0.0/0       0.0.0.0/0       tcp     ssh
+
+# Overwatch, Hearthstone, Diablo. 3478-3497 are very general RTP ports.
+MARK(1-2)       0.0.0.0/0       0.0.0.0/0       tcp,udp bnetgame,blizwow,6113
+MARK(1-2)       0.0.0.0/0       0.0.0.0/0       udp     3478-3497,5060,5062,6120,6250,12000-64000
+
+# Local traffic
+{% for item in networks | dict2items | sort(attribute='value.vlan_id') %}
+MARK(1-2)       {{ "%-15s" | format(item.value.subnet) }} {{ item.value.subnet }}
+{% endfor %}
