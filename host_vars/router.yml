@@ -11,6 +11,9 @@ rename_interfaces:
 wan_interface: wan0
 net_interface: ppp0
 
+net_bandwidth_down: 77
+net_bandwidth_up: 20
+
 default_domain: home
 external_domain: home.kidibox.net
 

@@ -1,0 +1,13 @@
+#
+# Shorewall -- /etc/shorewall/tcdevices
+#
+# For information about entries in this file, type "man shorewall-tcdevices"
+#
+# See http://shorewall.net/traffic_shaping.htm for additional information.
+#
+###############################################################################
+#INTERFACE      97%_down        90%_up          options(set hfsc)
+{{ "%-15s" | format(net_interface) }} {{ "%-15s" | format("%dmbit:200kb" | format(net_bandwidth_down * 0.97)) }} {{ "%-15s" | format("%dmbit" | format(net_bandwidth_up * 0.90)) }} hfsc
+{% for item in networks | dict2items | sort(attribute='value.vlan_id') %}
+{{ "%-15s" | format(item.key) }} 1000mbit:200kb  1000mbit        hfsc
+{% endfor %}
