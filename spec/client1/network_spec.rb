@@ -14,3 +14,7 @@ describe host('client2') do
   it { should be_resolvable.by('dns') }
   it { should be_reachable }
 end
+
+describe host('ifconfig.co') do
+  it { should be_reachable.with(port: 443) }
+end
