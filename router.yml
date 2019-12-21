@@ -19,3 +19,5 @@
     - role: fail2ban
       banaction: shorewall
       tags: [fail2ban, firewall]
+    - role: yay
+      tags: [yay, aur]

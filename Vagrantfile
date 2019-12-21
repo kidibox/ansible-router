@@ -1,4 +1,8 @@
 base_setup = <<~SCRIPT
+  pacman -Suy haveged
+  systemctl enable --now haveged
+  rm -fr /etc/pacman.d/gnupg
+  pacman-key --init
   pacman-key --populate archlinux
   pacman -Suy --noconfirm --noprogressbar bash-completion bind-tools net-tools python vim --ignore linux
 SCRIPT
@@ -40,7 +44,7 @@ setup_dhcp = <<~SCRIPT
 SCRIPT
 
 setup_pppoe = <<~SCRIPT
-  pacman-key --populate archlinux
+  # pacman-key --populate archlinux
   pacman -Sy --noconfirm rp-pppoe python
 
   cat <<EOT > /etc/ppp/pppoe-server-options
@@ -103,20 +107,24 @@ SCRIPT
 Vagrant.configure('2') do |config|
   config.vm.box = 'archlinux/archlinux'
 
-  config.vm.provision 'shell', inline: <<~SCRIPT
-    for name in $( ls /sys/class/net | grep eth ); do
-      systemctl disable "netctl@${name}.service"
-    done
-  SCRIPT
+  # config.vm.provision 'shell', inline: <<~SCRIPT
+  #   for name in $( ls /sys/class/net | grep eth ); do
+  #     systemctl disable "netctl@${name}.service"
+  #   done
+  # SCRIPT
 
   config.vm.define 'isp' do |isp|
     isp.vm.hostname = 'isp'
     isp.vm.network 'private_network', virtualbox__intnet: 'pppoe'
+    isp.vm.provision 'shell', inline: base_setup
     isp.vm.provision 'shell', inline: setup_pppoe
   end
 
   config.vm.define 'router' do |router|
     router.vm.hostname = 'router'
+    router.vm.box = 'freebsd/FreeBSD-12.0-RELEASE'
+    router.vm.synced_folder '.', '/vagrant', disabled: true
+    router.ssh.shell = 'sh'
 
     router.vm.network 'private_network', mac: '000db94bf848', virtualbox__intnet: 'pppoe'
     router.vm.network 'private_network', mac: '000db94bf849', virtualbox__intnet: 'lan1'
@@ -127,18 +135,18 @@ Vagrant.configure('2') do |config|
       virtualbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
     end
 
-    router.vm.provision 'shell', run: 'once', inline: base_setup
-    router.vm.provision 'ansible' do |ansible|
-      ansible.limit = 'all'
-      ansible.playbook = 'router.yml'
-      ansible.raw_arguments = ['--diff']
-      ansible.extra_vars = {
-        is_vagrant: true,
-        ppp_provider: 'foo',
-        ppp_username: 'bar',
-        ppp_password: 'baz'
-      }
-    end
+    # router.vm.provision 'shell', run: 'once', inline: base_setup
+    # router.vm.provision 'ansible' do |ansible|
+    #   ansible.limit = 'all'
+    #   ansible.playbook = 'router.yml'
+    #   ansible.raw_arguments = ['--diff']
+    #   ansible.extra_vars = {
+    #     is_vagrant: true,
+    #     ppp_provider: 'foo',
+    #     ppp_username: 'bar',
+    #     ppp_password: 'baz'
+    #   }
+    # end
   end
 
   config.vm.define 'client1' do |client1|
@@ -149,12 +157,12 @@ Vagrant.configure('2') do |config|
     client1.vm.provision 'shell', run: 'once', inline: setup_dhcp
   end
 
-  config.vm.define 'client2' do |client2|
-    client2.vm.hostname = 'client2'
-    client2.vm.network 'private_network', virtualbox__intnet: 'lan2'
-    client2.vm.provision 'shell', run: 'once', inline: base_setup
-    client2.vm.provision 'shell', run: 'once', inline: disable_nat
-    client2.vm.provision 'shell', run: 'once', inline: setup_dhcp
-  end
+  # config.vm.define 'client2' do |client2|
+  #   client2.vm.hostname = 'client2'
+  #   client2.vm.network 'private_network', virtualbox__intnet: 'lan2'
+  #   client2.vm.provision 'shell', run: 'once', inline: base_setup
+  #   client2.vm.provision 'shell', run: 'once', inline: disable_nat
+  #   client2.vm.provision 'shell', run: 'once', inline: setup_dhcp
+  # end
 end
 # rubocop:enable Metrics/BlockLength

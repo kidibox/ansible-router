@@ -8,3 +8,4 @@ gem 'rake', require: false
 gem 'rubocop', require: false
 gem 'serverspec'
 gem 'vagrant', git: 'https://github.com/hashicorp/vagrant.git'
+gem 'inspec'
