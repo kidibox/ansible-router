@@ -1,6 +1,6 @@
 base_setup = <<~SCRIPT
   pacman-key --populate archlinux
-  pacman -Suy --noconfirm --noprogressbar bash-completion bind-tools net-tools python vim --ignore linux
+  pacman -Suy --noconfirm --noprogressbar bash-completion bind-tools gnu-netcat net-tools python vim --ignore linux
 SCRIPT
 
 disable_nat = <<~SCRIPT
